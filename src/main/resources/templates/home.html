@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shib IDP Relying Party Config Initializr</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/css/spring.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="initializr-header">
+            <div class="container">
+                <h1>IDP Relying Party Config Initializr</h1>
+                <p>Generate Relying Party Config</p>
+            </div>
+        </div>
+    </div>
+    <form id="form" class="form-horizontal" action="/relying-party.xml" method="get" role="form">
+        <div class="row">
+            <p class="text-center">
+                <button name="generate-relying-party-config" type="submit" class="btn btn-lg btn-primary" role="button">
+                    <span class="glyphicon glyphicon-download"></span> Generate Relying Party Config
+                </button>
+            </p>
+        </div>
+    </form>
+
+</div>
+<script>
+    var updateForm = function(sel) {
+        var selected = sel.options[sel.selectedIndex];
+        sel.form.action = selected.getAttribute("data-action");
+    }
+</script>
+</body>
+</html>

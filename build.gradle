@@ -1,0 +1,36 @@
+buildscript {
+    ext {
+        springBootVersion = '1.1.6.RELEASE'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'relying-party-initializr'
+    version = '0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    jcenter()
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-starter-groovy-templates")
+    compile("org.codehaus.groovy:groovy")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}

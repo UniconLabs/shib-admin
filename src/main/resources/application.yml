@@ -1,0 +1,11 @@
+# Allow templates to be reloaded at dev time
+spring.groovy.template:
+  cache: false
+  configuration:
+    autoIndent: true
+    autoNewLine: true
+    useDoubleQuotes: true
+
+logging:
+  level:
+    org.springframework.web: INFO
