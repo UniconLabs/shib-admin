@@ -35,17 +35,20 @@
     <!-- {!end layout} -->
 
     <div class="container-fluid">
-        <div th:include="layout :: left"></div>
         <div class="hero-unit span9">
             <p>
                  <h3>Generate Relying Party Config</h3>
             </p>
 
+            <form action="#" th:action="@{/relying-party.xml}" th:object="${relyingPartyConfigForm}" method="post">
+                <p>IDP Entity ID: <input type="text" th:field="*{idpEntityId}" /></p>
+                <p>IDP Home Path: <input type="text" th:field="*{idpHome}" /></p>
             <p>
-                <a class="btn btn-primary btn-large"
-                th:href="@{/relying-party.xml}">Download Relying Party Config</a>
+                <button name="generate-relying-party-config" type="submit" class="btn btn-lg btn-primary" role="button">
+                     Download Relying Party Config
+                </button>
             </p>
-
+            </form>
         </div>
     </div>
     <div th:include="layout :: foot"></div>
