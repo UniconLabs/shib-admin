@@ -23,18 +23,25 @@ class ShibIdpConfigController {
 
     private static RELYING_PARTY_TEMPLATE_PATH = 'classpath:/templates/relying-party.tpl'
 
+    private static DEFAULT_IDP_ENTITY_ID = 'https://localhost:9443/shibboleth/idp'
+
+    private static DEFAULT_IDP_HOME_PATH = '/opt/shibboleth-idp'
+
     @RequestMapping('/relying-party.xml')
-    def generateRelyingPartyConfig(def relyingPartyConfigRequest) {
-        //TODO: obviously need to do the dynamic model binding for the template which would be gathered from the UI
-        // For now the model contains hardcoded values so we could prove the dynamic Groovy Markup template binding
-        def relyingPartyConfigResponsePayload = generateRelyingPartyConfigFromTemplate([idpEntityId: 'https://localhost:9443/idp/shibboleth',
-                                                                                        idpHome    : '/opt/shibboleth-idp'])
+    def generateRelyingPartyConfig(ConfigForm relyingPartyConfigRequest) {
+
+        //TODO: more advanced relying-party dynamic config values
+        //TODO: form submission validation (required fields, etc.)
+        def relyingPartyConfigResponsePayload = generateRelyingPartyConfigFromTemplate([idpEntityId: relyingPartyConfigRequest.idpEntityId,
+                                                                                        idpHome    : relyingPartyConfigRequest.idpHome])
 
         new ResponseEntity<byte[]>(relyingPartyConfigResponsePayload, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
     }
 
     @RequestMapping('/')
-    def home() {
+    def home(Map model) {
+        //Populate the form-backing object with defaults
+        model.relyingPartyConfigForm = new ConfigForm(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
         'home'
     }
 
@@ -43,5 +50,10 @@ class ShibIdpConfigController {
         def result = new StringWriter()
         writable.writeTo(result)
         result.toString()
+    }
+
+    static class ConfigForm {
+        String idpEntityId
+        String idpHome
     }
 }
