@@ -29,6 +29,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-groovy-templates")
     compile("org.codehaus.groovy:groovy")
+
+    testCompile("org.springframework:spring-test")
+    testCompile("junit:junit")
 }
 
 task wrapper(type: Wrapper) {
