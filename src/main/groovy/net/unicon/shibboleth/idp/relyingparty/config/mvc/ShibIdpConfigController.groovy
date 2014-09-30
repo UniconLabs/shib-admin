@@ -6,13 +6,16 @@ import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.SessionAttributes;
 
-@Controller
 /**
  * Spring MVC controller for the config generation UI
  */
+@Controller
+@SessionAttributes('relyingPartyConfigForm')
 class ShibIdpConfigController {
 
     @Autowired
@@ -28,27 +31,22 @@ class ShibIdpConfigController {
     private static DEFAULT_IDP_HOME_PATH = '/opt/shibboleth-idp'
 
     @RequestMapping('/relying-party.xml')
-    def generateRelyingPartyConfig(IdpConfig relyingPartyConfigRequest) {
+    def generateRelyingPartyConfig(@ModelAttribute('relyingPartyConfigForm') IdpConfig relyingPartyConfigRequest) {
 
         //TODO: more advanced relying-party dynamic config values
         //TODO: form submission validation (required fields, etc.)
-        // Hardcode couple of metadata providers until we figure out how to represent and bind this collection from UI, etc.
-        def mdProviders = [new MetadataProviderConfig(id: 'URLMD',
-                metadataUrl: 'http://www.testshib.org/metadata/testshib-providers.xml',
-                backingFile: '/opt/shibboleth-idp/metadata/testshib.xml'),
-                           new MetadataProviderConfig(id: 'URLMD2', metadataFile: '/opt/shibboleth-idp/metadata/example-sp-metadata.xml')]
-
         def relyingPartyConfigResponsePayload = generateRelyingPartyConfigFromTemplate([idpEntityId: relyingPartyConfigRequest.idpEntityId,
                                                                                         idpHome    : relyingPartyConfigRequest.idpHome,
-                                                                                        metadataProviders: mdProviders])
+                                                                                        metadataProviders: relyingPartyConfigRequest.metadataProviders])
 
         new ResponseEntity<byte[]>(relyingPartyConfigResponsePayload, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
     }
 
     @RequestMapping('/')
     def home(Map model) {
-        //Populate the form-backing object with defaults
-        model.relyingPartyConfigForm = new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
+        //Populate the form-backing object with defaults (and store it in HTTP session by means of type-level @SessionAttributes annotation)
+        // Hardcode couple of metadata providers until we figure out how to represent and bind this collection from UI, etc. (mockMetadataProviders())
+        model.relyingPartyConfigForm = new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH, metadataProviders: mockMetadataProviders())
         'home'
     }
 
@@ -57,6 +55,13 @@ class ShibIdpConfigController {
         def result = new StringWriter()
         writable.writeTo(result)
         result.toString()
+    }
+
+    private mockMetadataProviders() {
+        [new MetadataProviderConfig(id: 'URLMD',
+                metadataUrl: 'http://www.testshib.org/metadata/testshib-providers.xml',
+                backingFile: '/opt/shibboleth-idp/metadata/testshib.xml'),
+                           new MetadataProviderConfig(id: 'URLMD2', metadataFile: '/opt/shibboleth-idp/metadata/example-sp-metadata.xml')]
     }
 
     static class MetadataProviderConfig {

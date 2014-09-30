@@ -88,7 +88,7 @@ xmlDeclaration()
         """
 
         'metadata:MetadataProvider'(id: 'IdPMD', 'xsi:type': 'metadata:FilesystemMetadataProvider',
-                                    metadataFile: "$idpHome/metadata/idp-metadata.XMLLLL",
+                                    metadataFile: "$idpHome/metadata/idp-metadata.xml",
                                     maxRefreshDelay: 'P1D')
 
         newLine()
