@@ -102,6 +102,7 @@ xmlDeclaration()
         <metadata:MetadataProvider id="URLMD" xsi:type="metadata:FileBackedHTTPMetadataProvider"
                           metadataURL="http://example.org/metadata.xml"
                           backingFile="$idpHome/metadata/some-metadata.xml">
+
             <metadata:MetadataFilter xsi:type="metadata:ChainingFilter">
                 <metadata:MetadataFilter xsi:type="metadata:RequiredValidUntil"
                                 maxValidityInterval="P7D" />

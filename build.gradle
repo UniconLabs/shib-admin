@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.1.6.RELEASE'
+        springBootVersion = '1.1.7.RELEASE'
     }
     repositories {
         jcenter()
