@@ -6,7 +6,7 @@ A web app to initialize `relying-party.xml` configuration file with user provide
 
 ## Running the app locally
 
-This is a [Spring Boot](http://projects.spring.io/spring-boot/) application. This simplest way to run it with an embedded Tomcat server is via Gradle plugin on the command line:
+This is a [Spring Boot](http://projects.spring.io/spring-boot/) application. The simplest way to run it with an embedded Tomcat server is via Gradle plugin on the command line:
 
 ```bash
 $ cd shib-idp-relyingparty-initializr

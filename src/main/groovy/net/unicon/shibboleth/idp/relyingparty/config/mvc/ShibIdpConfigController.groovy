@@ -28,12 +28,19 @@ class ShibIdpConfigController {
     private static DEFAULT_IDP_HOME_PATH = '/opt/shibboleth-idp'
 
     @RequestMapping('/relying-party.xml')
-    def generateRelyingPartyConfig(ConfigForm relyingPartyConfigRequest) {
+    def generateRelyingPartyConfig(IdpConfig relyingPartyConfigRequest) {
 
         //TODO: more advanced relying-party dynamic config values
         //TODO: form submission validation (required fields, etc.)
+        // Hardcode couple of metadata providers until we figure out how to represent and bind this collection from UI, etc.
+        def mdProviders = [new MetadataProviderConfig(id: 'URLMD',
+                metadataUrl: 'http://www.testshib.org/metadata/testshib-providers.xml',
+                backingFile: '/opt/shibboleth-idp/metadata/testshib.xml'),
+                           new MetadataProviderConfig(id: 'URLMD2', metadataFile: '/opt/shibboleth-idp/metadata/example-sp-metadata.xml')]
+
         def relyingPartyConfigResponsePayload = generateRelyingPartyConfigFromTemplate([idpEntityId: relyingPartyConfigRequest.idpEntityId,
-                                                                                        idpHome    : relyingPartyConfigRequest.idpHome])
+                                                                                        idpHome    : relyingPartyConfigRequest.idpHome,
+                                                                                        metadataProviders: mdProviders])
 
         new ResponseEntity<byte[]>(relyingPartyConfigResponsePayload, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
     }
@@ -41,7 +48,7 @@ class ShibIdpConfigController {
     @RequestMapping('/')
     def home(Map model) {
         //Populate the form-backing object with defaults
-        model.relyingPartyConfigForm = new ConfigForm(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
+        model.relyingPartyConfigForm = new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
         'home'
     }
 
@@ -52,8 +59,29 @@ class ShibIdpConfigController {
         result.toString()
     }
 
-    static class ConfigForm {
+    static class MetadataProviderConfig {
+        String id
+        String metadataUrl
+        String backingFile
+        String metadataFile
+
+        def getType() {
+            if(metadataUrl) {
+                return 'metadata:FileBackedHTTPMetadataProvider'
+            }
+            else if (metadataFile) {
+                return 'metadata:FilesystemMetadataProvider'
+            }
+            else {
+                return 'metadata:Unknown'
+            }
+        }
+    }
+
+    static class IdpConfig {
         String idpEntityId
         String idpHome
+        //Just being explicit here about the type
+        List<MetadataProviderConfig> metadataProviders = []
     }
 }

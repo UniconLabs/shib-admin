@@ -88,7 +88,7 @@ xmlDeclaration()
         """
 
         'metadata:MetadataProvider'(id: 'IdPMD', 'xsi:type': 'metadata:FilesystemMetadataProvider',
-                                    metadataFile: "$idpHome/metadata/idp-metadata.xml",
+                                    metadataFile: "$idpHome/metadata/idp-metadata.XMLLLL",
                                     maxRefreshDelay: 'P1D')
 
         newLine()
@@ -114,8 +114,24 @@ xmlDeclaration()
                 </metadata:MetadataFilter>
             </metadata:MetadataFilter>
         </metadata:MetadataProvider>
-        -->
+        -->"""
 
+        newLine()
+        //Dynamic metadata providers rendering/generation from model data
+        metadataProviders.each {
+           if(it.metadataUrl) {
+               'metadata:MetadataProvider'(id: it.id, 'xsi:type': it.type,
+                       metadataURL: it.metadataUrl, backingFile: it.backingFile)
+           }
+           else if(it.metadataFile) {
+               'metadata:MetadataProvider'(id: it.id, 'xsi:type': it.type,
+                       metadataFile: it.metadataFile)
+           }
+           newLine()
+           newLine()
+       }
+
+    yieldUnescaped """
     </metadata:MetadataProvider>
 
 
