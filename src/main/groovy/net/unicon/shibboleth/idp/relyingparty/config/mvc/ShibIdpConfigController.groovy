@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
@@ -30,7 +31,32 @@ class ShibIdpConfigController {
 
     private static DEFAULT_IDP_HOME_PATH = '/opt/shibboleth-idp'
 
-    @RequestMapping('/relying-party.xml')
+    @ModelAttribute('metadataProviderConfigForm')
+    def metadataProviderConfigForm() {
+        //Form-backing object to bind to from the UI
+        new MetadataProviderConfig()
+    }
+
+    @ModelAttribute('relyingPartyConfigForm')
+    def relyingPartyConfigForm() {
+        //Populate the form-backing object with defaults (and store it in HTTP session by means of type-level @SessionAttributes annotation)
+        new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
+    }
+
+    @RequestMapping('/')
+    def home() {
+        'home'
+    }
+
+    @RequestMapping(value = '/metadataProvider', method = RequestMethod.POST)
+    def addMetadataProvider(@ModelAttribute('relyingPartyConfigForm') IdpConfig relyingPartyConfigRequest, MetadataProviderConfig mdProviderConfigRequest) {
+        //TODO obviously needs validation, etc.
+        relyingPartyConfigRequest.addMetadataProvider mdProviderConfigRequest
+        'home'
+    }
+
+
+    @RequestMapping(value = '/relying-party.xml', method = RequestMethod.POST)
     def generateRelyingPartyConfig(@ModelAttribute('relyingPartyConfigForm') IdpConfig relyingPartyConfigRequest) {
 
         //TODO: more advanced relying-party dynamic config values
@@ -42,15 +68,7 @@ class ShibIdpConfigController {
         new ResponseEntity<byte[]>(relyingPartyConfigResponsePayload, ['Content-Type': 'application/octet-stream'] as HttpHeaders, HttpStatus.OK)
     }
 
-    @RequestMapping('/')
-    def home(Map model) {
-        //Populate the form-backing object with defaults (and store it in HTTP session by means of type-level @SessionAttributes annotation)
-        // Hardcode couple of metadata providers until we figure out how to represent and bind this collection from UI, etc. (mockMetadataProviders())
-        model.relyingPartyConfigForm = new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH, metadataProviders: mockMetadataProviders())
-        'home'
-    }
-
-    byte[] generateRelyingPartyConfigFromTemplate(def model) {
+    private byte[] generateRelyingPartyConfigFromTemplate(def model) {
         def writable = this.templateEngine.createTemplate(this.resourceLoader.getResource(RELYING_PARTY_TEMPLATE_PATH).URL).make(model)
         def result = new StringWriter()
         writable.writeTo(result)
@@ -88,5 +106,9 @@ class ShibIdpConfigController {
         String idpHome
         //Just being explicit here about the type
         List<MetadataProviderConfig> metadataProviders = []
+
+        def addMetadataProvider(MetadataProviderConfig mdProviderConfig) {
+            metadataProviders << mdProviderConfig
+        }
     }
 }
