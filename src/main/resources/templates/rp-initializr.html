@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:substituteby="layout :: head" />
+
+<body>
+    <!-- include header -->
+    <div th:include="layout :: body-header"></div>
+
+    <!-- TODO: Make this programmatic -->
+    <ul class="breadcrumb">
+        <li><a th:href="@{/}">Home</a><span class="divider">/</span></li>
+        <li class="active">Relying Party Initializr</li>
+    </ul>
+    <div class="container-fluid">
+
+        <div class="hero-unit span8">
+            <p>
+                 <h3>Metadata Provider Config</h3>
+            </p>
+
+            <form action="#" th:action="@{/rp-initializr/metadataProvider}" th:object="${metadataProviderConfigForm}" method="post">
+                <p>ID: <input type="text" th:field="*{id}" /></p>
+                <p>Metadata URL <input type="text" th:field="*{metadataUrl}" class="input-xxlarge"/></p>
+                <p>Backing File <input type="text" th:field="*{backingFile}" class="input-xxlarge"/></p>
+                <p>Metadata File <input type="text" th:field="*{metadataFile}" class="input-xxlarge"/></p>
+            <p>
+                <button name="generate-relying-party-config" type="submit" class="btn btn-lg btn-primary" role="button">
+                     Add Metadata Provider
+                </button>
+            </p>
+            </form>
+        </div>
+    </div>
+
+    <h2>Metadata Providers</h2>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th style="width: 150px;">ID</th>
+            <th style="width: 200px;">URL</th>
+            <th style="width: 200px;">Backiung File</th>
+            <th style="width: 200px;">File</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="provider : ${relyingPartyConfigForm.metadataProviders}">
+            <td th:text="${provider.id}">URLMD</td>
+            <td th:text="${provider.metadataUrl}">http://example.com</td>
+            <td th:text="${provider.backingFile}">/opt/idp/metadata.xml</td>
+            <td th:text="${provider.metadataFile}">/opt/idp/metadata.xml</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <div class="container-fluid">
+
+        <div class="hero-unit span12">
+            <p>
+            <h3>Generate Relying Party Config</h3>
+            </p>
+
+            <form action="#" th:action="@{/rp-initializr/relying-party.xml}" th:object="${relyingPartyConfigForm}" method="post">
+                <p>IDP Entity ID: <input type="text" th:field="*{idpEntityId}" class="input-xxlarge"/></p>
+                <p>IDP Home Path: <input type="text" th:field="*{idpHome}" class="input-xxlarge"/></p>
+                <p>
+                    <button name="generate-relying-party-config" type="submit" class="btn btn-lg btn-primary" role="button">
+                        Download Relying Party Config
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div th:include="layout :: body-footer"></div>
+
+</body>
+</html>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  */
 @Controller
 @SessionAttributes('relyingPartyConfigForm')
+@RequestMapping('/rp-initializr')
 class ShibIdpConfigController {
 
     @Autowired
@@ -43,16 +44,16 @@ class ShibIdpConfigController {
         new IdpConfig(idpEntityId: DEFAULT_IDP_ENTITY_ID, idpHome: DEFAULT_IDP_HOME_PATH)
     }
 
-    @RequestMapping('/')
+    @RequestMapping('')
     def home() {
-        'home'
+        'rp-initializr'
     }
 
     @RequestMapping(value = '/metadataProvider', method = RequestMethod.POST)
     def addMetadataProvider(@ModelAttribute('relyingPartyConfigForm') IdpConfig relyingPartyConfigRequest, MetadataProviderConfig mdProviderConfigRequest) {
         //TODO obviously needs validation, etc.
         relyingPartyConfigRequest.addMetadataProvider mdProviderConfigRequest
-        'home'
+        'rp-initializr'
     }
 
 
