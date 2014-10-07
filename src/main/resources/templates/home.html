@@ -7,8 +7,9 @@
 <body>
 <!-- include header -->
 <div th:include="layout :: body-header"></div>
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-stacked">
     <li><a th:href="@{rp-initializr}">Relying Party Initializr</a></li>
+    <li><a th:href="@{attribute-authority}">Attribute Authority</a></li>
 </ul>
 <div th:include="layout :: body-footer"></div>
 </body>

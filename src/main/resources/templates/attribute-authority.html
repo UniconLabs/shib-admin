@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:substituteby="layout :: head"/>
+<body>
+<!-- include header -->
+<div th:include="layout :: body-header"></div>
+
+<!-- TODO: Make this programmatic -->
+<ul class="breadcrumb">
+    <li><a th:href="@{/}">Home</a><span class="divider">/</span></li>
+    <li class="active">Attribute Authority</li>
+</ul>
+<div class="container-fluid">
+    <h1>Attribute Authority</h1>
+
+    <form action="#" th:action="@{/attribute-authority}" th:object="${attributeAuthorityForm}" method="post">
+        <div>
+            <label for="principal">Principal</label>
+            <input type="text" name="principal" id="principal" th:field="*{principal}"/>
+            <label for="requester">Requester</label>
+            <input type="text" name="requester" id="requester" th:field="*{requester}"/>
+            <label for="authnMethod">Authentication Method</label>
+            <select th:field="*{authnMethod}" id="authnMethod">
+                <option th:each="authnMethod : ${authenticationTypes}"
+                        th:value="${authnMethod}"
+                        th:text="${authnMethod}">Authentication Method</option>
+            </select>
+        </div>
+        <div>
+            <button name="query-attribute-authority" type="submit" class="btn btn-lg btn-primary" role="button">Query
+            </button>
+        </div>
+    </form>
+    <pre th:if="${attributeAuthorityResponse}" th:text="${attributeAuthorityResponse}">
+        nothing to see here
+    </pre>
+</div>
+</body>
+</html>

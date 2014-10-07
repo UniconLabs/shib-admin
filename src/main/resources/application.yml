@@ -9,3 +9,6 @@ spring.groovy.template:
 logging:
   level:
     org.springframework.web: INFO
+
+idp:
+  home: /opt/shibboleth-idp

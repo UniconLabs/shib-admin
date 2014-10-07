@@ -15,6 +15,7 @@ apply plugin: 'spring-boot'
 
 repositories {
     jcenter()
+    maven { url "https://build.shibboleth.net/nexus/content/groups/public" }
 }
 
 
@@ -22,6 +23,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-groovy-templates")
     compile("org.codehaus.groovy:groovy")
+
+    compile("edu.internet2.middleware:shibboleth-common:${project.'shibboleth-common.version'}")
+    compile("edu.internet2.middleware:shibboleth-identityprovider:${project.'shibboleth.version'}")
 
     testCompile("org.springframework:spring-test")
     testCompile("junit:junit")
