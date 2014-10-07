@@ -1,4 +1,4 @@
-package net.unicon.shibboleth.idp.relyingparty.config.mvc
+package net.unicon.shibboleth.admin.mvc
 
 import groovy.text.TemplateEngine
 import org.springframework.beans.factory.annotation.Autowired

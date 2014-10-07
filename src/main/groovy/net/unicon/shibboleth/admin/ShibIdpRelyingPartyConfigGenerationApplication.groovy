@@ -1,4 +1,4 @@
-package net.unicon.shibboleth.idp.relyingparty.config
+package net.unicon.shibboleth.admin
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
