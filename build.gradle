@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.1.7.RELEASE'
+        springBootVersion = project."spring-boot.version"
     }
     repositories {
         jcenter()
@@ -12,13 +12,6 @@ buildscript {
 
 apply plugin: 'groovy'
 apply plugin: 'spring-boot'
-
-jar {
-    baseName = 'relying-party-initializr'
-    version = '0.1-SNAPSHOT'
-}
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
 
 repositories {
     jcenter()
