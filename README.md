@@ -18,4 +18,11 @@ If your IdP is not installed in the default location (`/opt/shibboeth-idp`), you
 ./gradlew bootRun -Pargs="--idp.home=/Users/jj/tmp/shib2"
 ```
 
+You can also create a distributable jar and run it with
+
+```bash
+./gradlew clean build
+java -jar ./build/libs/shib-admin-1.0-SNAPSHOT.jar --idp.home=/Users/jj/tmp/shib2
+```
+
 In a web browser access `http://localhost:8080`
